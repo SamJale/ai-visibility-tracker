@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Methodology — AI Visibility Tracker</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .doc { max-width: 720px; margin: 0 auto; padding: 8px 24px 60px; }
+    .doc h1 { font-size: 28px; letter-spacing: -0.02em; margin: 30px 0 6px; }
+    .doc h2 { font-size: 18px; margin: 34px 0 8px; letter-spacing: -0.01em; }
+    .doc p, .doc li { color: #44403c; }
+    .doc .lead { color: var(--muted); font-size: 15.5px; }
+    .formula {
+      font-family: var(--mono); background: var(--panel); border: 1px solid var(--line);
+      border-radius: 10px; padding: 16px 18px; font-size: 14px; overflow-x: auto; margin: 14px 0;
+    }
+    .doc code { font-family: var(--mono); background: var(--accent-soft); color: var(--accent); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+    .weights { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+    .weights .w { flex: 1; min-width: 150px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+    .weights .w .k { font-family: var(--mono); font-size: 22px; font-weight: 700; color: var(--accent); }
+    .weights .w .l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .doc ul { padding-left: 20px; }
+    .doc li { margin: 6px 0; }
+    .divider { border: none; border-top: 1px solid var(--line); margin: 34px 0; }
+
+    /* column guide */
+    .cols { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin: 14px 0; }
+    .cols .r { display: flex; gap: 14px; padding: 11px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .cols .r:last-child { border-bottom: none; }
+    .cols .r .name { flex: 0 0 128px; font-weight: 600; color: var(--ink); }
+    .cols .r .desc { color: #44403c; }
+
+    /* flowchart */
+    .flowwrap { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); padding: 10px; margin: 14px 0; overflow-x: auto; }
+    .flow { width: 100%; min-width: 460px; height: auto; display: block; }
+    .flow .box { fill: #fff; stroke: var(--line-strong); stroke-width: 1; }
+    .flow .box.accent { fill: var(--accent-soft); stroke: #c7d2fe; }
+    .flow .t { font-family: var(--sans); font-weight: 600; font-size: 13.5px; fill: var(--ink); }
+    .flow .s { font-family: var(--sans); font-size: 11.5px; fill: var(--muted); }
+    .flow .mono { font-family: var(--mono); font-size: 12px; fill: var(--accent); font-weight: 600; }
+    .flow .edge { stroke: var(--line-strong); stroke-width: 1.5; fill: none; }
+    .flowcap { color: var(--muted); font-size: 12.5px; text-align: center; margin: 2px 0 0; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brandmark"><span class="dot"></span> AI Visibility Tracker</div>
+      <nav><a href="/">Dashboard</a></nav>
+    </div>
+  </header>
+
+  <main class="doc">
+    <a class="back" href="/">← Dashboard</a>
+    <h1>How it's measured</h1>
+    <p class="lead">Detection is fully deterministic. There are no LLM judges anywhere in the pipeline — every number here can be reproduced by re-reading the same answers, which you can do yourself via <strong>View raw data</strong> on any search term. Each run asks all five engines the same question and reads their answers the same way.</p>
+
+    <h2>How a scan works</h2>
+    <div class="flowwrap">
+      <svg class="flow" viewBox="0 0 720 662" role="img" aria-label="Flowchart of the scan pipeline">
+        <defs>
+          <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 z" fill="#a8a29e"></path>
+          </marker>
+        </defs>
+
+        <!-- edges -->
+        <path class="edge" d="M360,62 L360,92" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M360,152 L360,188" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M360,234 L206,260" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M360,234 L514,260" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M200,346 L354,378" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M520,346 L366,378" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M360,438 L360,474" marker-end="url(#arrow)"></path>
+        <path class="edge" d="M360,538 L360,574" marker-end="url(#arrow)"></path>
+
+        <!-- A -->
+        <rect class="box" x="210" y="16" width="300" height="46" rx="9"></rect>
+        <text class="t" x="360" y="44" text-anchor="middle">Your search term</text>
+
+        <!-- B -->
+        <rect class="box" x="150" y="92" width="420" height="60" rx="9"></rect>
+        <text class="t" x="360" y="117" text-anchor="middle">Query all 5 engines × 3 samples</text>
+        <text class="s" x="360" y="135" text-anchor="middle">SearchApi request = { engine, q } — nothing else is sent</text>
+
+        <!-- C -->
+        <rect class="box" x="210" y="188" width="300" height="46" rx="9"></rect>
+        <text class="t" x="360" y="216" text-anchor="middle">Read each answer: text + cited links</text>
+
+        <!-- D left: mention -->
+        <rect class="box" x="60" y="262" width="280" height="84" rx="9"></rect>
+        <text class="t" x="200" y="288" text-anchor="middle">Mention</text>
+        <text class="s" x="200" y="308" text-anchor="middle">brand name appears in the text</text>
+        <text class="s" x="200" y="325" text-anchor="middle">(citation link URLs stripped first)</text>
+
+        <!-- D right: citation -->
+        <rect class="box" x="380" y="262" width="280" height="84" rx="9"></rect>
+        <text class="t" x="520" y="288" text-anchor="middle">Citation</text>
+        <text class="s" x="520" y="308" text-anchor="middle">a linked source resolves to</text>
+        <text class="s" x="520" y="325" text-anchor="middle">the brand's own domain</text>
+
+        <!-- E -->
+        <rect class="box" x="150" y="378" width="420" height="60" rx="9"></rect>
+        <text class="t" x="360" y="404" text-anchor="middle">Average the samples</text>
+        <text class="s" x="360" y="422" text-anchor="middle">within each engine, then across the engines</text>
+
+        <!-- F -->
+        <rect class="box accent" x="150" y="474" width="420" height="64" rx="9"></rect>
+        <text class="t" x="360" y="500" text-anchor="middle">AI Visibility Score (0–100)</text>
+        <text class="mono" x="360" y="521" text-anchor="middle">0.70·mention + 0.15·citation + 0.15·position</text>
+
+        <!-- G -->
+        <rect class="box" x="110" y="574" width="500" height="72" rx="9"></rect>
+        <text class="t" x="360" y="602" text-anchor="middle">Leaderboard — ranked by score</text>
+        <text class="s" x="360" y="622" text-anchor="middle">Mention rate · Citation rate · Named by · Share of voice · Movement</text>
+      </svg>
+    </div>
+    <p class="flowcap">Every step is deterministic. Brands are logged from citations, non-vendor domains are filtered, and each brand's move since the last run is recorded.</p>
+
+    <h2>Mention vs. citation</h2>
+    <p>These are tracked separately because they are different kinds of visibility. A brand can be cited as a source without ever being recommended, and it can be recommended without its own site being linked.</p>
+    <ul>
+      <li><strong>Mention</strong> — the engine named the brand in its answer text. A brand counts as mentioned when one of its names appears on a word boundary in the answer, after citation link URLs are stripped first (so a domain sitting inside a citation is never mistaken for a prose mention).</li>
+      <li><strong>Citation</strong> — the engine linked the brand's own domain as a source. A brand counts as cited when one of the sources the engine links resolves to the brand's registrable domain.</li>
+    </ul>
+
+    <h2>Sampling</h2>
+    <p>AI answers are non-deterministic — ask the same question twice and the brands can change. So each engine is queried several times per scan (three by default) and the results are averaged: within each engine first (the share of its samples that named or cited the brand), then across the engines that answered, so every engine carries equal weight regardless of how many samples it returned.</p>
+
+    <h2>Averaging across scans</h2>
+    <p>Sampling within a scan is not enough on its own. A brand's mention rate is a proportion estimated from a limited number of draws (5 engines × 5 samples = 25 answers at the default), so it carries real sampling error — and that error is largest for brands in the middle of the board, which is exactly where most brands sit. Measured on live scans, a brand averaging an 18% mention rate moved between 4.9 and 24.8 points across scans taken minutes apart, with nothing underneath it changing. The observed spread matched what binomial sampling noise predicts, engine by engine, so it was noise rather than movement.</p>
+    <p>So the <strong>AI Visibility score, mention rate, citation rate, and position factor shown on the leaderboard are averaged over the last three scans</strong>. That cuts the run-to-run standard deviation by roughly 2.8×. Matching the same reduction by sampling harder would take about 24× as many API requests per scan. Each row also shows its own single-scan value underneath, so nothing is hidden, and the trend line uses the same trailing average as the headline number.</p>
+    <p>The trade-off is deliberate: a genuine change in visibility takes about three scans to show up in full rather than appearing instantly. Averaging only counts scans in which a brand was already on the board, so a newly-discovered brand starts unsmoothed and settles as the window fills.</p>
+
+    <h2>Do the engines agree?</h2>
+    <p>The matrix under the leaderboard shows, for each brand, what each engine did with it. A cell's percentage is that engine's mention rate — the share of its samples that named the brand — so you'll see values like 67% (named in two of three samples). A <span style="color:var(--accent);font-weight:700;">◆</span> marks that the engine also cited the brand as a source. The <strong>Named by</strong> column counts how many of the five engines named it at least once, so you can tell a brand every engine agrees on from one that only a single engine likes.</p>
+
+    <h2>The AI Visibility Score</h2>
+    <p>A single 0–100 number per brand, per search term, computed across that term's engine answers (averaged over the samples above, then over the last three scans).</p>
+    <div class="formula">score = 100 × ( 0.70 × mention&nbsp;rate + 0.15 × citation&nbsp;rate + 0.15 × position&nbsp;factor )</div>
+    <div class="weights">
+      <div class="w"><div class="k">70%</div><div class="l">Mention rate — the share of answers that mention the brand.</div></div>
+      <div class="w"><div class="k">15%</div><div class="l">Citation rate — the share of answers that cite the brand's domain.</div></div>
+      <div class="w"><div class="k">15%</div><div class="l">Position factor — the mean of 1/position over answers that mention it. Being named first counts more than being named fifth.</div></div>
+    </div>
+
+    <h2>Reading the leaderboard</h2>
+    <p>Every column, in order:</p>
+    <div class="cols">
+      <div class="r"><span class="name">AI Visibility</span><span class="desc">The blended 0–100 score above. This is what the board is ranked by.</span></div>
+      <div class="r"><span class="name">Mention rate</span><span class="desc">Share of engine answers that named the brand in the text (drives 70% of the score).</span></div>
+      <div class="r"><span class="name">Citation rate</span><span class="desc">Share of engine answers that linked the brand's own domain (drives 15% of the score).</span></div>
+      <div class="r"><span class="name">Named by</span><span class="desc">How many of the five engines named the brand at least once — the breadth of agreement.</span></div>
+      <div class="r"><span class="name">Share of voice</span><span class="desc">The brand's share of all brand mentions for this term in the run.</span></div>
+      <div class="r"><span class="name">Movement</span><span class="desc">Change in the brand's position since the previous run.</span></div>
+    </div>
+
+    <h2>Share of voice</h2>
+    <p>A brand's share of all brand mentions for the search term in that run. If ten brands are named twenty times in total and one brand accounts for five of those, its share of voice is 25%.</p>
+
+    <h2>The brand log</h2>
+    <p>Brands are discovered from the sources the engines cite: any newly-cited domain is added to that term's log and stays there permanently. Once a brand is in the log, it is matched by name across every term. This is why a brand keeps its place on the leaderboard even after it stops showing — so you can watch it move. Your own brand is always included, whether it shows or not.</p>
+    <p>Each brand is identified by its registrable domain (taken from the real citation link), so the same brand never appears twice under different spellings. Two different companies that share a name but sit on different domains (say <code>serpapi.com</code> and <code>serpapi.cc</code>) are kept as separate brands. When the answer text just names the shared word — which on its own is ambiguous — the mention is credited to one of them: the brand whose domain the engine cited in that answer, or otherwise the primary (the most-cited across the run). That way a look-alike domain can't inherit the real company's score. Only companies that sell a product or service belong on a board, so search engines, forums, encyclopedias, code hosts, and review/comparison sites are filtered out by a curated denylist — and you can exclude anything it misses, or add a brand it missed, straight from the term's pages. None of this uses an LLM; it's a maintained list, so the results stay reproducible.</p>
+
+    <h2>Movement</h2>
+    <p>The change in a brand's leaderboard position since the previous run. <span class="mv up">▲</span> means it climbed, <span class="mv down">▼</span> means it slipped, and <span class="mv new">NEW</span> marks a brand appearing on the board for the first time.</p>
+
+    <hr class="divider" />
+    <p class="dim" style="font-size:13px;">Engines: ChatGPT, Perplexity, Gemini, Copilot, and Google AI Mode, all queried through <a href="https://www.searchapi.io" target="_blank" rel="noopener">SearchApi.io</a>. Each engine is sampled three times per term per run, and the samples are averaged.</p>
+  </main>
+  <footer>Deterministic scoring · no LLM judges · data via SearchApi.io</footer>
+</body>
+</html>

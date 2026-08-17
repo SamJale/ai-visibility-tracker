@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Visibility — search term</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brandmark"><span class="dot"></span> AI Visibility Tracker</div>
+      <nav>
+        <a href="/methodology.html">Methodology</a>
+        <a href="/">Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+      <a class="back" href="/">← All search terms</a>
+      <a class="back" id="rawLink" href="#" style="margin-left:auto;">View raw data →</a>
+    </div>
+    <h1 id="termTitle" style="font-size:26px; letter-spacing:-0.02em; margin:6px 0 4px;">…</h1>
+    <div id="subline" class="dim" style="font-size:13px;"></div>
+
+    <h2 class="section-title">Leaderboard</h2>
+    <p class="section-sub">Every brand the engines have named or cited for this term. Brands stay on the board even after they drop out, so you can watch them move. Your brand is always included.</p>
+    <div class="table-wrap"><table id="leaderTable"></table></div>
+    <div id="excluded"></div>
+
+    <h2 class="section-title">Do the engines agree?</h2>
+    <p class="section-sub">Where each brand was named, engine by engine. A brand can dominate one engine and be invisible on another — the spread shows how much they disagree.</p>
+    <div class="table-wrap"><table id="agreeTable"></table></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:#4f46e5;"></span> % of that engine's samples that named the brand</span>
+      <span><span class="swatch" style="background:#eef2ff;"></span> never named</span>
+      <span><span class="cite-dot on" style="position:static;">◆</span> also cited (linked as a source)</span>
+      <span><b>Named by</b> = how many engines named it at all</span>
+    </div>
+
+    <div id="errors" style="margin-top:20px;"></div>
+  </main>
+
+  <footer>Deterministic scoring · no LLM judges · data via SearchApi.io</footer>
+  <script src="/term.js"></script>
+</body>
+</html>

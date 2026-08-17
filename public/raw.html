@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Raw data — AI Visibility Tracker</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brandmark"><span class="dot"></span> AI Visibility Tracker</div>
+      <nav><a href="/methodology.html">Methodology</a><a href="/">Dashboard</a></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <a class="back" id="backLink" href="/">← Back to leaderboard</a>
+    <h1 style="font-size:24px; letter-spacing:-0.02em; margin:6px 0 4px;">Raw data · <span id="termTitle"></span></h1>
+    <div id="subline" class="dim" style="font-size:13px;"></div>
+    <p class="section-sub" style="margin-top:10px;">This is everything the leaderboard is derived from: exactly what each engine answered, and how every cited source was handled. Read the answers to spot any brand the tool missed, then add it below.</p>
+
+    <div class="legend" style="margin-bottom:18px;">
+      <span><span class="stag your-brand">your brand</span></span>
+      <span><span class="stag brand">counted brand</span></span>
+      <span><span class="stag filtered">filtered (non-vendor)</span></span>
+      <span><span class="stag label-only">cited by name, no link</span></span>
+    </div>
+
+    <div id="engines"></div>
+
+    <h2 class="section-title">Brands cited by name, but not linked</h2>
+    <p class="section-sub">These were named as sources without a usable URL, so auto-discovery can't place them. If one is a real vendor, add it with its domain and it'll be scored across your whole history.</p>
+    <div id="candidates"></div>
+
+    <div class="panel" style="margin-top:22px;">
+      <h2>Add a brand the tool missed</h2>
+      <p class="sub">See a vendor named in an answer that isn't on the board? Add it here. Boards re-derive from the stored answers, so its past mentions and citations show up immediately.</p>
+      <div class="two-col">
+        <div class="field"><label>Brand name</label><input type="text" id="bName" placeholder="e.g. ScraperAPI" autocomplete="off" /></div>
+        <div class="field"><label>Brand domain</label><input type="text" id="bDomain" placeholder="e.g. scraperapi.com" autocomplete="off" /></div>
+      </div>
+      <button class="btn primary" id="addBtn" type="button">Add brand</button>
+    </div>
+  </main>
+  <footer>Deterministic scoring · no LLM judges · data via SearchApi.io</footer>
+  <script src="/raw.js"></script>
+</body>
+</html>

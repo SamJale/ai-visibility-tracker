@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Visibility Tracker</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <div class="brandmark"><span class="dot"></span> AI Visibility Tracker</div>
+      <nav>
+        <a href="/methodology.html">Methodology</a>
+        <button class="navbtn" id="openSettings" type="button">⚙ Settings</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <h1>Which brands the AI engines actually recommend.</h1>
+      <p>Ask ChatGPT, Perplexity, Gemini, Copilot, and Google AI Mode the questions your buyers ask, then measure which brands their answers mention and cite. Track your position over time.</p>
+      <div class="engine-strip" id="engineStrip"></div>
+    </section>
+
+    <section class="panel" id="configPanel">
+      <h2>Setup</h2>
+      <p class="sub">Add your brand and the search terms you want to monitor. One brand, as many terms as you like.</p>
+
+      <div class="two-col">
+        <div class="field">
+          <label>Your brand name</label>
+          <input type="text" id="brandName" placeholder="e.g. SearchApi" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Your brand domain</label>
+          <input type="text" id="brandDomain" placeholder="e.g. searchapi.io" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Search terms</label>
+        <div class="terms-list" id="termsList"></div>
+        <div class="row">
+          <input type="text" id="termInput" placeholder="e.g. best serp api  —  press Enter to add" autocomplete="off" />
+          <button class="btn" id="addTermBtn" type="button">Add</button>
+        </div>
+      </div>
+
+      <div class="field" style="max-width:280px;">
+        <label>Samples per engine</label>
+        <select id="samples">
+          <option value="1">1 — fastest, cheapest</option>
+          <option value="3" selected>3 — recommended (averaged)</option>
+          <option value="5">5 — most stable</option>
+        </select>
+        <div class="dim" id="costNote" style="font-size:12px; margin-top:6px;"></div>
+      </div>
+
+      <div class="row" style="margin-top: 6px;">
+        <button class="btn" id="saveBtn" type="button">Save setup</button>
+        <button class="btn primary" id="runBtn" type="button">Run scan</button>
+        <span id="setupNote" class="dim" style="font-size:13px;"></span>
+      </div>
+    </section>
+
+    <div class="meta-row">
+      <div id="lastRun" class="dim"></div>
+      <div class="spacer"></div>
+    </div>
+
+    <section id="cards" class="grid"></section>
+  </main>
+
+  <footer>Deterministic scoring · no LLM judges · data via SearchApi.io</footer>
+
+  <div class="modal-backdrop" id="settingsModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Settings</h2>
+        <button class="modal-x" id="closeSettings" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="field">
+        <label>SearchApi API key</label>
+        <div class="row">
+          <input type="password" id="apiKeyInput" placeholder="paste your key" autocomplete="off" spellcheck="false" />
+          <button class="btn" id="revealKey" type="button" title="show / hide">👁</button>
+        </div>
+        <div class="dim" id="keyStatus" style="font-size:12.5px; margin-top:8px;"></div>
+      </div>
+      <div class="row" style="margin-top:6px;">
+        <button class="btn primary" id="saveKey" type="button">Save key</button>
+        <button class="btn" id="testKey" type="button" title="Sends one real request">Test key</button>
+        <button class="btn ghost" id="clearKey" type="button">Clear</button>
+      </div>
+      <p class="dim" style="font-size:12px; margin:14px 0 0;">Stored locally in <code>data/settings.json</code> (gitignored) and sent only to SearchApi.io. Get a key at <a href="https://www.searchapi.io" target="_blank" rel="noopener">searchapi.io</a>. Testing uses 1 request.</p>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
